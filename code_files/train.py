@@ -1,7 +1,8 @@
 from typing import Tuple, Union
+import json
 
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import GridSearchCV
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 import sklearn.linear_model as linear_model
 from sklearn.metrics import mean_absolute_error, root_mean_squared_error
 
@@ -31,6 +32,38 @@ def grid_search(
     grid_search.fit(X, y)
     return grid_search
 
+def random_search(
+    X: np.ndarray,
+    y: np.ndarray,
+    model: OurModels,
+    params: dict,
+    cv: int = 5,
+    n_iters: int = 100,
+    verbose: int = 2,
+) -> GridSearchCV:
+    rand_search = RandomizedSearchCV(
+        model,
+        params,
+        n_iter=100,
+        n_jobs=-1,
+        scoring="neg_root_mean_squared_error",
+        cv=cv,
+        return_train_score=True,
+        verbose=verbose,
+    )
+
+    rand_search.fit(X, y)
+    return rand_search
+
+def save_model(model, output_dir: str = "results/"):
+
+    # Get the model configuration
+    config = model.get_params()
+    class_name = model.__class__.__name__
+
+    # Save the configuration to a JSON file
+    with open(f"{output_dir}/{class_name}_config.json", "w") as f:
+        json.dump(config, f)
 
 def train(
     model,
