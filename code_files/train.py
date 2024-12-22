@@ -4,7 +4,7 @@ import json
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 import sklearn.linear_model as linear_model
-from sklearn.metrics import mean_absolute_error, root_mean_squared_error
+from sklearn.metrics import mean_absolute_error, root_mean_squared_error, r2_score
 
 import pandas as pd
 import numpy as np
@@ -82,7 +82,7 @@ def train(
 
     mae = mean_absolute_error(y_dev, y_hat)
     rmse = root_mean_squared_error(y_dev, y_hat)
-    r2 = root_mean_squared_error(y_dev, y_hat)
+    r2 = r2_score(y_dev, y_hat)
 
     return model, [mae, rmse, r2]
 
