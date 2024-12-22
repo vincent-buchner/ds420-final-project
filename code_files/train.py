@@ -44,9 +44,9 @@ def random_search(
     rand_search = RandomizedSearchCV(
         model,
         params,
-        n_iter=100,
+        n_iter=n_iters,
         n_jobs=-1,
-        scoring="neg_root_mean_squared_error",
+        scoring="neg_mean_absolute_error",
         cv=cv,
         return_train_score=True,
         verbose=verbose,
@@ -63,7 +63,11 @@ def save_model(model, output_dir: str = "results/"):
 
     # Save the configuration to a JSON file
     with open(f"{output_dir}/{class_name}_config.json", "w") as f:
-        json.dump(config, f)
+        print(config)
+        try:
+            json.dump(config, f)
+        except TypeError as err:
+            print("Error saving model configuration to JSON file: ", err)
 
 def train(
     model,
